@@ -18,9 +18,9 @@ export default function ServiceNode({ data, selected }: NodeProps) {
         <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] shrink-0" />
         <span className="text-xs font-medium text-[#93c5fd] truncate">{d.label}</span>
       </div>
-      {meta && (
+      {meta && (meta.language !== 'unknown' || meta.framework !== 'unknown') && (
         <p className="text-[10px] text-[#3b82f6] mt-1 truncate opacity-70">
-          {meta.language} · {meta.framework}
+          {[meta.language !== 'unknown' ? meta.language : null, meta.framework !== 'unknown' ? meta.framework : null].filter(Boolean).join(' · ')}
         </p>
       )}
       <Handle type="source" position={Position.Right} className="!bg-[#3b82f6] !border-[#1e3a5f]" />
