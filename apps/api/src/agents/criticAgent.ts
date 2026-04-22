@@ -11,6 +11,7 @@ interface AgentResults {
   data: { nodes: DiagramNode[]; edges: DiagramEdge[] };
   service: { nodes: DiagramNode[]; edges: DiagramEdge[] };
   infra: { nodes: DiagramNode[]; edges: DiagramEdge[] };
+  features?: { nodes: DiagramNode[]; edges: DiagramEdge[] };
   mainServiceNode: DiagramNode;
 }
 
@@ -29,6 +30,7 @@ export async function runCriticAgent(
     ...results.data.nodes,
     ...results.service.nodes,
     ...results.infra.nodes,
+    ...(results.features?.nodes ?? []),
   ];
 
   const allEdges: DiagramEdge[] = [
@@ -36,6 +38,7 @@ export async function runCriticAgent(
     ...results.data.edges,
     ...results.service.edges,
     ...results.infra.edges,
+    ...(results.features?.edges ?? []),
   ];
 
   const deduped = deduplicateNodes(allNodes);
