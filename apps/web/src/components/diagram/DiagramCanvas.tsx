@@ -16,6 +16,7 @@ import ApiNode from './nodes/ApiNode';
 import DatabaseNode from './nodes/DatabaseNode';
 import InfraNode from './nodes/InfraNode';
 import ExternalNode from './nodes/ExternalNode';
+import FeatureNode from './nodes/FeatureNode';
 import type { DiagramNode, DiagramEdge } from '@codebase-viz/shared-types';
 
 const nodeTypes: NodeTypes = {
@@ -24,6 +25,7 @@ const nodeTypes: NodeTypes = {
   database: DatabaseNode as never,
   infra: InfraNode as never,
   external: ExternalNode as never,
+  feature: FeatureNode as never,
 };
 
 function toFlowNode(n: DiagramNode): Node {
@@ -35,11 +37,8 @@ function toFlowEdge(e: DiagramEdge): Edge {
     id: e.id,
     source: e.source,
     target: e.target,
-    label: e.label,
     animated: e.animated,
-    style: { stroke: '#444444', strokeWidth: 1 },
-    labelStyle: { fill: '#666666', fontSize: 10 },
-    labelBgStyle: { fill: '#111111' },
+    style: { stroke: '#333333', strokeWidth: 1 },
   };
 }
 
