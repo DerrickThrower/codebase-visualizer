@@ -1,4 +1,4 @@
-export type NodeType = 'service' | 'api' | 'database' | 'infra' | 'external';
+export type NodeType = 'service' | 'api' | 'database' | 'infra' | 'external' | 'feature';
 
 export type RelationshipType =
   | 'HANDLES'
@@ -53,11 +53,22 @@ export interface ExternalDependencyMetadata {
   agentSource: string;
 }
 
+export interface FeatureMetadata {
+  type: 'Feature';
+  name: string;
+  route: string | null;
+  filePath: string;
+  usesAuth: boolean;
+  confidence: number;
+  agentSource: string;
+}
+
 export type NodeMetadata =
   | ServiceMetadata
   | ApiEndpointMetadata
   | DatabaseEntityMetadata
-  | ExternalDependencyMetadata;
+  | ExternalDependencyMetadata
+  | FeatureMetadata;
 
 export interface DiagramNode {
   id: string;

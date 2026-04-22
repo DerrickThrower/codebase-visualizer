@@ -7,6 +7,7 @@ export type AgentName =
   | 'data'
   | 'service'
   | 'infra'
+  | 'features'
   | 'critic'
   | 'diagram'
   | 'diagram-generator';
