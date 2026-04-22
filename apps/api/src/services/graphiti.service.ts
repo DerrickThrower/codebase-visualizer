@@ -86,6 +86,8 @@ function buildNodeSummary(node: DiagramNode): string {
       return `Service: ${meta.name} (${meta.language}, ${meta.framework}) — entry: ${meta.filePath}`;
     case 'ExternalDependency':
       return `External dependency: ${meta.name} (${meta.category}), package: ${meta.sdkPackage}, env keys: ${meta.envKeys.join(', ')}`;
+    case 'Feature':
+      return `Feature: ${meta.name}${meta.route ? ` at route ${meta.route}` : ''} — file: ${meta.filePath}, auth: ${meta.usesAuth}`;
   }
 }
 
