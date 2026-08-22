@@ -70,7 +70,6 @@ export async function runFeaturesAgent(
 
   // Combine, deduplicate, and limit
   const candidateSet = new Set([...featureFiles, ...routeFiles]);
-  const candidates = Array.from(candidateSet).slice(0, 25);
 
   // Also scan route files discovered by the planner
   for (const rf of plannerResult.routeFiles) {

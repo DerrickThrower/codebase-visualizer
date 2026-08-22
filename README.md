@@ -7,7 +7,7 @@ A Turborepo monorepo that connects to a GitHub repository, runs multi-agent anal
 | Package / app | Description |
 |---------------|-------------|
 | `apps/web` | Next.js 14 (App Router) UI: repo connection, OAuth callback, React Flow diagram, agent status, natural-language query bar |
-| `apps/api` | Express API: sessions (Redis), GitHub OAuth, clone + analyze pipeline, SSE stream, streaming query responses |
+| `apps/api` | Express API: GitHub OAuth (Redis-backed cookie sessions), clone + analyze pipeline, SSE stream, streaming query responses |
 | `packages/shared-types` | Shared TypeScript types for diagrams and SSE events |
 | `packages/tsconfig` | Shared `tsconfig` presets |
 
@@ -71,7 +71,7 @@ Turbo runs the API and web app together:
 
 ## How it works (high level)
 
-1. The user opens the web app and signs in with GitHub (OAuth handled by the API; session cookie + Redis).
+1. The user opens the web app and signs in with GitHub (OAuth handled by the API; the login cookie is backed by Redis, and the flow is CSRF-guarded with a per-session `state` value).
 2. A session is created; the user submits a repository URL.
 3. The API clones the repo, runs planner and specialist agents (API surface, data, services, infra), merges results with a critic step, lays out nodes with Dagre, and pushes **SSE** events (`node:added`, `edge:added`, `agent:update`, `analysis:complete`, etc.) to the client.
 4. The visualize page consumes the stream and updates the React Flow canvas and status rail.
@@ -85,6 +85,13 @@ Register a GitHub OAuth app with:
 
 Ensure `FRONTEND_URL` matches where the browser loads the Next app (e.g. `http://localhost:3000`) so CORS and redirects stay consistent.
 
+## State and scaling
+
+Two kinds of state live here, and they are deliberately different:
+
+- **Login sessions** are in Redis via `connect-redis`, so the OAuth cookie survives an API restart.
+- **Analysis sessions and open SSE connections** are in-memory maps in the API process (`session.routes.ts`, `sseManager.ts`). An analysis is a single short-lived run, and its SSE stream is pinned to the process handling it — so a restart mid-analysis loses that run, and running more than one API instance would need Redis pub/sub to route events to whichever process holds the client's connection. Single-instance was the right call for the current scope; this is the seam to cut if it ever needs to scale out.
+
 ## License
 
-Private / unpublished unless you add a license file.
+MIT — see [LICENSE](LICENSE).
